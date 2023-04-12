@@ -1,16 +1,13 @@
 <template>
-  <div>
+<div>
+      <input id="NewFolder" placeholder="Name Folder">
+</div>
 
-  </div>
 </template>
 
 <script>
-
 export default {
-    name: 'App',
-    components: {
-        
-    } 
+
 }
 </script>
 
