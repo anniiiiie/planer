@@ -1,10 +1,18 @@
 <template>
-      <div>
-            <input id="NewFolder" placeholder="Name Folder">
-            <div class="changeColor">Change color of folder
-                  <div><input type="radio" id="redBut"><button id="yelBut"></button><button id="greBut"></button><button id="bluBut"></button><button id="purBut"></button><button id="pinBut"></button></div>
+      <div class="folder">
+            <h2 id="top-text">Create new folder</h2>
+            <input v-model="NameFolder" id="NewFolder" placeholder="Name Folder" >
+            <div class="changeColor">Change color of folder</div>
+            <div>
+                  <div><button  id="redBut" :class="{'active-color': activeColor === 'redBut'}" @click="chooseColor('redBut')"></button>
+                  <button  id="yelBut" :class="{'active-color': activeColor === 'yelBut'}" @click="chooseColor('yelBut')"></button>
+                  <button id="greBut" :class="{'active-color': activeColor === 'greBut'}" @click="chooseColor('greBut')"></button>
+                  <button id="bluBut" :class="{'active-color': activeColor === 'bluBut'}" @click="chooseColor('bluBut')"></button>
+                  <button id="purBut" :class="{'active-color': activeColor === 'purBut'}" @click="chooseColor('purBut')"></button>
+                  <button id="pinBut" :class="{'active-color': activeColor === 'pinBut'}" @click="chooseColor('pinBut')"></button></div>
             </div>
-            <button @click="Choose">Create</button>
+            <button @click="Choose(activeColor, NameFolder)">Create</button>
+      
       </div>
 
 </template>
@@ -13,30 +21,52 @@
 export default {
       name: 'unvisibleForm',
       data(){
-            return{
-                  all_folders:[],
-                  new_folder:''
-            }
-      },
-      methods:{
-            Choose(){
-                  this.new_folder = document.getElementById('NewFolder').value;
-                  index = this.new_folder.length + 1
-                  informaionFolder_$(index) = {
-                        name: this.new_folder,
-                        color: 
-                  }
-            }
-      }
+        return{
+            visibleForm: 0,
+            all_folder: [
+                // {
+                //     name: 'Buy',
+                //     color: 'green',
+                // }
+            ],
+            new_folder: {
+                name: '',
+                color: '',
+            },
+            activeColor: 'redBut',
+            NameFolder:'',
+        }
+    },
+    methods: {
+        AddNewFolder(){
 
+        },
+        chooseColor(id) {
+            this.activeColor = id;
+        },
+        Choose(activeColor, NameFolder){
+            this.new_folder = {
+                name: NameFolder,
+                color: activeColor
+            }, 
+            this.all_folder.push(this.new_folder)
+            activeColor = 'redBut'
+            this.NameFolder = ''
+        }
+    }
 }
 </script>
 
+
 <style>
-.changeColor{
+    .changeColor{
       display: flex;
       align-items: center;
 
+}
+#top-text{
+      font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+      font-size: 1rem;
 }
 #redBut{
       background-color: rgb(247, 63, 63);
@@ -44,6 +74,8 @@ export default {
       padding: 20px;
       margin: 4px 2px;
       border-radius: 50%;
+      cursor: pointer;
+
 }
 #yelBut{
       background-color: rgb(247, 222, 83);
@@ -51,6 +83,7 @@ export default {
       padding: 20px;
       margin: 4px 2px;
       border-radius: 50%;
+      cursor: pointer;
 }
 #greBut{
       background-color: rgb(111, 240, 128);
@@ -58,6 +91,7 @@ export default {
       padding: 20px;
       margin: 4px 2px;
       border-radius: 50%;
+      cursor: pointer;
 }
 #bluBut{
       background-color: rgb(63, 137, 247);
@@ -65,6 +99,7 @@ export default {
       padding: 20px;
       margin: 4px 2px;
       border-radius: 50%;
+      cursor: pointer;
 }
 #purBut{
       background-color: rgb(165, 112, 250);
@@ -72,6 +107,7 @@ export default {
       padding: 20px;
       margin: 4px 2px;
       border-radius: 50%;
+      cursor: pointer;
 }
 #pinBut{
       background-color: rgb(252, 121, 208);
@@ -79,5 +115,9 @@ export default {
       padding: 20px;
       margin: 4px 2px;
       border-radius: 50%;
+      cursor: pointer;
+}
+.active-color {
+    border: 2px solid black !important;
 }
 </style>

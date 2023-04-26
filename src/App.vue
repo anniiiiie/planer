@@ -1,20 +1,18 @@
 <template>
   <div>
-      <div v-if="all_folder.lenght === 0">
+      <div v-if="this.all_folder.lenght === 0">
         <p>You have no tasks</p>
     </div>   
     <div>
         <button @click="AddNewFolder()">+ create new folder</button> 
         <button>{{ all_folder[id] }}</button>
+        <new-folder v-on="$emit()">
+
+        </new-folder>
+        
     
     </div>
-    <div>
-            <input id="NewFolder" placeholder="Name Folder">
-            <div class="changeColor">Change color of folder
-                  <div><input type="radio" id="redBut"><button id="yelBut"></button><button id="greBut"></button><button id="bluBut"></button><button id="purBut"></button><button id="pinBut"></button></div>
-            </div>
-            <button @click="Choose">Create</button>
-      </div>
+    
   </div>
 </template>
 
@@ -23,9 +21,9 @@
 export default {
     name: 'App',
     components: {
-        // unvisibleFormVue
+        unvisibleFormVue
     },
-    data(){
+    data: function(){
         return{
             all_folder: [
                 // {
@@ -33,12 +31,26 @@ export default {
                 //     color: 'green',
                 // }
             ],
-            new_folder: '',
+            visibleForm:0
         }
     },
     methods: {
-        AddNewFolder(){
+        AddNewFolder(all_folder){
+            this.visibleForm = 1
 
+        },
+        chooseColor(id) {
+            this.activeColor = id;
+        },
+        Choose(activeColor, NameFolder){
+            this.new_folder = {
+                name: NameFolder,
+                color: activeColor
+            }, 
+            this.all_folder.push(this.new_folder)
+            activeColor = 'redBut'
+            this.NameFolder = ''
+            
         }
     }
 }
