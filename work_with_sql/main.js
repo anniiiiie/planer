@@ -40,6 +40,7 @@ fastify.get('/',async function (request, reply) {
     const client = await pool.connect()
     try{
         const users = await client.query(`select * from "Folders"`)
+
         
         data.message = users.rows
     }
@@ -51,6 +52,51 @@ fastify.get('/',async function (request, reply) {
     }
     reply.send(data)
 })
+
+fastify.get('/folder/show', async function (request, replace){
+    let data = {
+        message: 'error',
+        statusCode: 400
+    }
+    const UrlName = '/folder/show'
+    const client = await pool.connect()
+    try{
+        // const users = await client.query(`select * from "Folders"`)
+        const folders = await client.query(`select "folder_id" from folders`) 
+        // не можем обратиться к folders не блока трай кеч, поэтому => data.message = folders.rows 
+        // тип в постмане совпадает с типом перед скобкой в начвале гет и гет, пост и пост и тд
+        
+        data.message = folders.rows
+    }
+    catch(e){
+        console.log(e);
+    }
+    finally{
+        await client.release()
+    }
+    reply.send(data)
+})
+//  создание папки через фронт 
+
+fastify.post('/folder/create', async function (request, reply) {
+    let data = {
+        message: 'error',
+        statusCode: 400
+    }
+    const urlName = '/folder/create'
+    const client = await pool.connect()
+    try{
+        const folders = await client.query(`insert into folders ("folder_name") values ($1, $2)` [request.body.folder_name, request.body.folder_color])
+    }
+    catch{}
+    finally{
+
+    }
+
+    console.log(`Тело запроса: `,JSON.stringify(request.body))
+    reply.send(request.body)
+})
+
 
 // Создание маршрута для post запроса
 fastify.post('/post',function (request, reply) {
@@ -70,7 +116,7 @@ fastify.get('/query',function (request, reply) {
     reply.send(request.query)
 })
 
-// Запускаем сервер на порту 3000
+// Запускаем сервер на порту 3000(см в постмане)
 fastify.listen({ port: 3000 }, function (err, address) {
     if (err) {
         fastify.log.error(err)

@@ -22,7 +22,7 @@ export default {
       name: 'unvisibleForm',
       data(){
         return{
-            visibleForm: 0,
+            visibleForm: 1,
             all_folder: [
                 // {
                 //     name: 'Buy',
@@ -38,13 +38,20 @@ export default {
         }
     },
     methods: {
-        AddNewFolder(){
-
-        },
-        chooseColor(id) {
+      AddNewFolder(){
+            if (this.NameFolder.length>0 && this.activeColor != 0){
+                  this.new_folder.name = this.NameFiolder
+                  this.new_folder.color = this.activeColor
+                  this.$emit('addFolder', this.newFolder)
+            }
+            else{
+                  this.placeholder = 'Поле имя не должно быть пустым'
+            }
+      },
+      chooseColor(id) {
             this.activeColor = id;
-        },
-        Choose(activeColor, NameFolder){
+      },
+      Choose(activeColor, NameFolder){
             this.new_folder = {
                 name: NameFolder,
                 color: activeColor
@@ -52,7 +59,7 @@ export default {
             this.all_folder.push(this.new_folder)
             activeColor = 'redBut'
             this.NameFolder = ''
-        }
+      }
     }
 }
 </script>

@@ -5,23 +5,29 @@
     </div>   
     <div>
         <button @click="AddNewFolder()">+ create new folder</button> 
-        <button>{{ all_folder[id] }}</button>
-        <new-folder v-on="$emit()">
+        <div v-for="(folder) in all_folders"
+        :key=folder.id>
+            <button >{{ folder.name }}</button>
+        </div>
+        
+        <new-folder>
 
         </new-folder>
-        
-    
+    <div v-if="visibleForm === 1">  
+        <UnvisibleForm/>
+        </div> 
     </div>
     
   </div>
 </template>
 
 <script>
+import UnvisibleForm from './components/unvisibleForm.vue'
 
 export default {
     name: 'App',
     components: {
-        unvisibleFormVue
+        UnvisibleForm
     },
     data: function(){
         return{
@@ -36,22 +42,23 @@ export default {
     },
     methods: {
         AddNewFolder(all_folder){
+            console.log(all_folder);
             this.visibleForm = 1
 
         },
         chooseColor(id) {
             this.activeColor = id;
         },
-        Choose(activeColor, NameFolder){
-            this.new_folder = {
-                name: NameFolder,
-                color: activeColor
-            }, 
-            this.all_folder.push(this.new_folder)
-            activeColor = 'redBut'
-            this.NameFolder = ''
+        // Choose(activeColor, NameFolder){
+        //     this.new_folder = {
+        //         name: NameFolder,
+        //         color: activeColor
+        //     }, 
+        //     this.all_folder.push(this.new_folder)
+        //     activeColor = 'redBut'
+        //     this.NameFolder = ''
             
-        }
+        // }
     }
 }
 </script>
