@@ -24,10 +24,10 @@ export default {
         return{
             visibleForm: 1,
             all_folder: [
-                // {
-                //     name: 'Buy',
-                //     color: 'green',
-                // }
+            //     {
+            //         name: 'Buy',
+            //         color: 'green',
+            //     }
             ],
             new_folder: {
                 name: '',
@@ -65,7 +65,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
     .changeColor{
       display: flex;
       align-items: center;
