@@ -63,12 +63,13 @@ fastify.get('/folder/show', async function (request, reply){
     const UrlName = '/folder/show'
     const client = await pool.connect()
     try{
-        if(folder.rows.length > 0){
+        
             // const users = await client.query(`select * from "Folders"`)
             const folders = await client.query(`select "folder_id", "folder_name", "folder_color" from folders`) 
             // не можем обратиться к folders не блока трай кеч, поэтому => data.message = folders.rows 
             // тип в постмане совпадает с типом перед скобкой в начвале гет и гет, пост и пост и тд
-            data.message = folders.rows
+        if(folders.rows.length > 0){
+                data.message = folders.rows
         }
         else{
             console.log('Таблица пустая')
