@@ -1,7 +1,7 @@
 <template>
       <div class="folder">
             <h2 id="top-text">Create new folder</h2>
-            <input v-model="NameFolder" id="NewFolder" placeholder="Name Folder" >
+            <input v-model="NameFolder" id="NewFolder" :placeholder="placeholder" >
             <div class="changeColor">Change color of folder</div>
             <div>
                   <div><button  id="redBut" :class="{'active-color': activeColor === 'redBut'}" @click="chooseColor('redBut')"></button>
@@ -11,7 +11,7 @@
                   <button id="purBut" :class="{'active-color': activeColor === 'purBut'}" @click="chooseColor('purBut')"></button>
                   <button id="pinBut" :class="{'active-color': activeColor === 'pinBut'}" @click="chooseColor('pinBut')"></button></div>
             </div>
-            <button @click="Choose(activeColor, NameFolder)">Create</button>
+            <button @click="AddNewFolder(activeColor, NameFolder)" >Create</button>
       
       </div>
 
@@ -22,44 +22,55 @@ export default {
       name: 'unvisibleForm',
       data(){
         return{
-            visibleForm: 1,
-            all_folder: [
-            //     {
-            //         name: 'Buy',
-            //         color: 'green',
-            //     }
+            all_folder:[
+                  {
+                        neme:'',
+                        color:''
+                  }
             ],
+            visibleForm: 0,
             new_folder: {
                 name: '',
                 color: '',
             },
             activeColor: 'redBut',
             NameFolder:'',
+            placeholder: 'Name Folder'
         }
     },
     methods: {
-      AddNewFolder(){
-            if (this.NameFolder.length>0 && this.activeColor != 0){
-                  this.new_folder.name = this.NameFiolder
+      AddNewFolder(activeColor, NameFolder){
+            if (this.NameFolder.length>0){
+                  this.new_folder.name = this.NameFolder
                   this.new_folder.color = this.activeColor
-                  this.$emit('addFolder', this.newFolder)
+                  this.new_folder = {
+                        name: NameFolder,
+                        color: activeColor,
+                  }, 
+                  this.$emit('addFolder', this.new_folder)
+                  console.log(this.new_folder)
+                  activeColor = 'redBut'
+                  this.NameFolder = ''
+                  this.Close()
             }
             else{
-                  this.placeholder = 'Поле имя не должно быть пустым'
+                  this.placeholder = 'Place cannot be empty'
             }
       },
       chooseColor(id) {
             this.activeColor = id;
       },
-      Choose(activeColor, NameFolder){
-            this.new_folder = {
-                name: NameFolder,
-                color: activeColor
-            }, 
-            this.all_folder.push(this.new_folder)
-            activeColor = 'redBut'
-            this.NameFolder = ''
+      Close(){
+            this.visibleForm = 0
       }
+      // Choose(activeColor, NameFolder){
+      //       this.new_folder = {
+      //           name: NameFolder,
+      //           color: activeColor
+      //       }, 
+      //       activeColor = 'redBut'
+      //       this.NameFolder = ''
+      // }
     }
 }
 </script>
