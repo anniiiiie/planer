@@ -143,10 +143,10 @@ fastify.post('/folder/rename',async function(request,reply){
     const client = await pool.connect()
     try {
         const folder = await client.query(`UPDATE folders
-                                           SET "folderName"  = $1
-                                             , "folderColor" = $3
-                                           WHERE "folderId" = $2
-                                           RETURNING *`, [ request.body.folderName, request.body.folderId, request.body.folderColor ]);
+                                           SET "folder_name"  = $1
+                                             , "folder_color" = $3
+                                           WHERE "folder_id" = $2
+                                           RETURNING *`, [ request.body.folder_name, request.body.folder_id, request.body.folder_color ]);
         console.log(folder);
         if(folder.rowCount > 0){
             data.message = folder.rows[0]
@@ -166,7 +166,25 @@ fastify.post('/folder/rename',async function(request,reply){
     }
     reply.send(data)
 })
-
+// удаление папки
+// 
+fastify.post('/folder/delete',async function (request, reply) {
+    let data = {
+        message:'error'
+    }    
+    const client = await pool.connect()
+    try{
+        const users = await client.query(`delete from folders (folder_id)`)
+        data.message = users.rows
+    }
+    catch(e){
+        console.log(e);
+    }
+    finally{
+        await client.release()
+    }
+    reply.send(data)
+})
 
 
 // Создание маршрута для post запроса

@@ -3,16 +3,17 @@
             <h2 id="top-text">Create new folder</h2>
             <input v-model="NameFolder" id="NewFolder" :placeholder="placeholder" >
             <div class="changeColor">Change color of folder</div>
-            <div>
-                  <div><button  id="redBut" :class="{'active-color': activeColor === 'redBut'}" @click="chooseColor('redBut')"></button>
+                  <div>
+                  <button  id="redBut" :class="{'active-color': activeColor === 'redBut'}" @click="chooseColor('redBut')"></button>
                   <button  id="yelBut" :class="{'active-color': activeColor === 'yelBut'}" @click="chooseColor('yelBut')"></button>
                   <button id="greBut" :class="{'active-color': activeColor === 'greBut'}" @click="chooseColor('greBut')"></button>
                   <button id="bluBut" :class="{'active-color': activeColor === 'bluBut'}" @click="chooseColor('bluBut')"></button>
                   <button id="purBut" :class="{'active-color': activeColor === 'purBut'}" @click="chooseColor('purBut')"></button>
-                  <button id="pinBut" :class="{'active-color': activeColor === 'pinBut'}" @click="chooseColor('pinBut')"></button></div>
-            </div>
+                  <button id="pinBut" :class="{'active-color': activeColor === 'pinBut'}" @click="chooseColor('pinBut')"></button>
+                  
+                  </div>
+            
             <button @click="AddNewFolder(activeColor, NameFolder)" >Create</button>
-      
       </div>
 
 </template>
@@ -41,8 +42,6 @@ export default {
     methods: {
       AddNewFolder(activeColor, NameFolder){
             if (this.NameFolder.length>0){
-                  this.new_folder.name = this.NameFolder
-                  this.new_folder.color = this.activeColor
                   this.new_folder = {
                         name: NameFolder,
                         color: activeColor,
@@ -52,6 +51,7 @@ export default {
                   activeColor = 'redBut'
                   this.NameFolder = ''
                   this.Close()
+                  this.placeholder = 'Name Folder'
             }
             else{
                   this.placeholder = 'Place cannot be empty'
@@ -81,6 +81,14 @@ export default {
       display: flex;
       align-items: center;
 
+}
+.folder{
+      width: 280px;
+      height: 100px;
+      margin-top: 550px;
+      position: absolute;
+      left:200px;
+      background-color: rgb(200, 255, 183);
 }
 #top-text{
       font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;

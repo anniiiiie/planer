@@ -13,14 +13,14 @@
 
             </new-folder> -->
         <div v-if="visibleForm === 1">  
-            <UnvisibleForm @addFolder="addCreatedFolder(new_folder)"/>
+            <UnvisibleForm @addFolder="addCreatedFolder"/>
         </div>
 
         <div v-if="all_folder.length!== 0">
             <div 
-            v-for="(folder) in all_folder"
+            v-for="folder in all_folder"
             :key=folder.id
-            ><button v-bind:id="folder.color">{{ folder.name }}</button>
+            ><button v-bind:id="folder.color+1">{{ folder.name }}</button>
         </div>
         </div>
     </div>
@@ -42,36 +42,37 @@ export default {
                     name: 'Buy',
                     color: 'redBut',
                 },
-                {
-                    name: 'Buy',
-                    color: 'bluBut',
-                },
-                {
-                    name: 'Buy',
-                    color: 'pinBut',
-                },
-                {
-                    name: 'Buy',
-                    color: 'yelBut',
-                },
 
             ],
             visibleForm:0
         }
     },
     methods: {
-        AddNewFolder(all_folder){
-            console.log(all_folder);
+        AddNewFolder(){
+            console.log(this.all_folder);
             this.visibleForm = 1
 
 
         },
-        addCreatedFolder(){
+        addCreatedFolder(new_folder){
             this.visibleForm = 0
-            this.all_folder.push(this.new_folder)
+            this.all_folder.push(new_folder)
             console.log(this.all_folder)        
+        },
+        async getTasks(){
+            try{
+                const response = await this.$axios.get('/folder/show')
+                console.log(response.data)
+            }
+            catch(error){
+                console.log("ERROR")
+            }
+            
         }
-    }
+    },
+    async created(){
+        await this.getTasks()
+        },
 }
 </script>
 
@@ -95,7 +96,7 @@ export default {
     text-align: center;
     font-family: 'IBM Plex Sans', sans-serif;
 }
-#redBut{
+#redBut1{
       /* background-color: rgb(247, 63, 63); */
       width: 20vw;
       height: 10vh;
@@ -106,8 +107,9 @@ export default {
       font-family: cursive;
       color: rgb(247, 63, 63);
       border: 3px solid rgb(247, 63, 63);
+      
 }
-#yelBut{
+#yelBut1{
       color: rgb(247, 222, 83);
       border: 3px solid rgb(247, 222, 83);
       width: 20vw;
@@ -117,7 +119,7 @@ export default {
       text-align: center;
       font-family: cursive;
 }
-#greBut{
+#greBut1{
       color: rgb(111, 240, 128);
       border: 3px solid rgb(111, 240, 128);
       width: 20vw;
@@ -128,7 +130,7 @@ export default {
       text-align: center;
       font-family: cursive;
 }
-#bluBut{
+#bluBut1{
       color: rgb(63, 137, 247);
       border: 3px solid rgb(63, 137, 247);
       width: 20vw;
@@ -139,7 +141,7 @@ export default {
       text-align: center;
       font-family: cursive;
 }
-#purBut{
+#purBut1{
       color: rgb(165, 112, 250);
       border: 3px solid rgb(165, 112, 250);
       width: 20vw;
@@ -150,7 +152,7 @@ export default {
       text-align: center;
       font-family: cursive;
 }
-#pinBut{
+#pinBut1{
       color: rgb(252, 121, 208);
       border: 3px solid rgb(252, 121, 208);
       width: 20vw;
