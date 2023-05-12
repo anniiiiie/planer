@@ -85,7 +85,7 @@ export default {
 .folder{
       width: 280px;
       height: 100px;
-      margin-top: 550px;
+      margin-top: 250px;
       position: absolute;
       left:200px;
       background-color: rgb(200, 255, 183);

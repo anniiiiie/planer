@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="main">
     <div id="left-column">
         <div v-if="all_folder.length==0">
             <p>You have not folders</p>
@@ -16,12 +16,30 @@
             <UnvisibleForm @addFolder="addCreatedFolder"/>
         </div>
 
-        <div v-if="all_folder.length!== 0">
+        <div v-if="all_folder.length!== 0" @click="choseFolder()">
             <div 
             v-for="folder in all_folder"
             :key=folder.id
             ><button v-bind:id="folder.color+1">{{ folder.name }}</button>
         </div>
+    </div>
+        <div id="right-column">
+            <h1>{{ choose_folder_name }}</h1>
+            <div v-if="all_tasks.length==0">
+                <p>You have not tasks</p>
+            </div> 
+            <div><button id="createTask" @click="AddNewTask()">+ new task</button></div>
+            <div v-if="visibleTaskForm === 1">  
+                <createTaskForm @addTask="addCreatedTask"/>
+            </div>
+            <div id="showTasks" v-if="all_tasks!==0">
+                <div v-for="task in all_tasks"
+                :key="task.id"> 
+                    <button >{{ task.name }}</button>
+
+                </div>
+            </div>
+
         </div>
     </div>
   </div>
@@ -29,22 +47,30 @@
 
 <script>
 import UnvisibleForm from './components/unvisibleForm.vue'
-
+import createTaskForm from './components/createTaskForm.vue';
 export default {
     name: 'App',
     components: {
-        UnvisibleForm
+        UnvisibleForm, createTaskForm
     },
     data: function(){
         return{
             all_folder: [
-                {
-                    name: 'Buy',
-                    color: 'redBut',
-                },
+                // {
+                //     name: 'Buy',
+                //     color: 'redBut',
+                // },
 
             ],
-            visibleForm:0
+            all_tasks:[
+                {
+                    name:'create', 
+                    status: 1, 
+                    folder: '',
+                }
+            ],
+            visibleForm:0,
+            visibleTaskForm:0
         }
     },
     methods: {
@@ -59,6 +85,18 @@ export default {
             this.all_folder.push(new_folder)
             console.log(this.all_folder)        
         },
+        AddNewTask(new_task){
+            new_task.folder = this.choose_folder_name
+            this.visibleTaskForm = 1
+        },
+        addCreatedTask(new_task){
+            console.log(new_task)
+            this.all_tasks.push(new_task)
+        },
+        choseFolder(){
+            const choose_folder_name = this.all_folder.folder.name
+            console.log(choose_folder_name)
+        },
         async getTasks(){
             try{
                 const response = await this.$axios.get('/folder/show')
@@ -72,11 +110,17 @@ export default {
     },
     async created(){
         await this.getTasks()
-        },
+        }
 }
 </script>
 
 <style>
+#main{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
  #left-column{
 	width:20vw;
 	height:100vh;
@@ -89,6 +133,21 @@ export default {
 	padding-right:10px;
 	background-color:#81ff96;
 	padding-top:100px;
+    font-family: 'IBM Plex Sans', sans-serif;
+ }
+ #right-column{
+    width:80vw;
+	height:100vh;
+	display:flex;
+	flex-direction:column;
+	align-items: flex-start;
+	justify-content: flex-start;
+	box-sizing: border-box;
+    margin-left: 20vw;
+    margin-top: 0;
+	padding-left:25px;
+	padding-right:10px;
+	background-color:#beffc9;
     font-family: 'IBM Plex Sans', sans-serif;
  }
 #butFolder{
