@@ -2,6 +2,8 @@
 const fastify = require('fastify')({
     logger: true // Эта штука нужна, чтобы в терминале отображались логи запросов
 })
+const pdfMakePrinter = require('pdfmake/src/printer')
+
 const Pool = require('pg-pool')
 const pool = new Pool({
     database: 'postgres',
@@ -31,6 +33,18 @@ fastify.register(require('@fastify/cors'), (instance) => {
         callback(null, corsOptions)
     }
 })
+
+const fonts = {
+    Roboto: {
+      normal: './fonts/Roboto-Black.ttf',
+      bold: './fonts/Roboto-Bold.ttf',
+      italics: './fonts/Roboto-Italic.ttf'
+    }
+  };
+
+const pdfmake = require('pdfmake');
+
+
 
 // Создание маршрута для get запроса
 fastify.get('/',async function (request, reply) {
@@ -168,24 +182,93 @@ fastify.post('/folder/rename',async function(request,reply){
 })
 // удаление папки
 // 
-fastify.post('/folder/delete',async function (request, reply) {
-    let data = {
-        message:'error'
-    }    
+fastify.post('/folder/delete', async function(request,reply) {
     const client = await pool.connect()
+    // непосредственное подкллючение к бд
+        let data = {
+        message:'error'
+    }
     try{
-        const users = await client.query(`delete from folders (folder_id)`)
-        data.message = users.rows
+        const result = await client.query(`delete from folders where "folder_id" = $1`, [request.body.folder_id])
+        if (result.rowCount > 0){
+            console.log('succesfully deleted')
+            data.result = 'we have deleted it'
+        }
     }
     catch(e){
-        console.log(e);
+        console.log(e)
     }
     finally{
-        await client.release()
+        client.release()
     }
     reply.send(data)
 })
 
+fastify.get('/task/show', async function (request, reply) {
+    let data = {
+        message: 'error',
+        statusCode: 400
+    }
+    const urlName = '/task/show'
+    const client = await pool.connect()
+    try{
+        const folders = await client.query(`insert into tasks task_name values ($1, $2, $3)` [request.body.task_name, request.body.folder_id, request.body.task_status])
+    }
+    catch(e){
+        console.log(e)
+    }
+    finally{
+        await client.release()
+    }
+
+    console.log(`Тело запроса: `,JSON.stringify(request.body))
+    reply.send(request.body)
+})
+
+async function docFileFromStream(document) {
+    const chunks = [];
+    let result = null;
+    return new Promise(function (resolve, reject) {
+        try {
+            document.on('data', function (chunk) {
+                chunks.push(chunk);
+            });
+            document.on('end', async function () {
+                result = Buffer.concat(chunks);
+                console.log('end');
+                resolve(result);
+                
+            });
+            document.on('error', reject);
+            document.end();
+        } catch (error) {
+            console.log('docFileFromStream ERROR');
+            console.log(error);
+            reject(null);
+        }
+    });
+}
+
+fastify.post('/pdf',async function (request, reply) {
+    try{
+        const printer = new pdfMakePrinter(fonts)
+        const docFile = printer.createPdfKitDocument({
+            content: [
+                'First paragraph',
+                'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
+            ]
+            
+        })
+        const doc = await docFileFromStream(docFile)
+        reply.header('Content-Type', "application/pdf")
+        reply.send(doc)
+
+    }
+    catch(e){
+        console.log(e);
+    }
+
+})
 
 // Создание маршрута для post запроса
 fastify.post('/post',function (request, reply) {
