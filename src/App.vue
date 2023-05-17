@@ -19,7 +19,7 @@
         <div v-if="all_folder.length!== 0" @click="choseFolder()">
             <div 
             v-for="folder in all_folder"
-            :key=folder.id
+            :key=folder.idr
             ><button v-bind:id="folder.color+1">{{ folder.name }}</button>
         </div>
     </div>
@@ -59,6 +59,7 @@ export default {
                 // {
                 //     name: 'Buy',
                 //     color: 'redBut',
+                //     id: 0
                 // },
 
             ],
@@ -82,6 +83,7 @@ export default {
         },
         addCreatedFolder(new_folder){
             this.visibleForm = 0
+            this.new_folder.id = this.all_folder.length
             this.all_folder.push(new_folder)
             console.log(this.all_folder)        
         },

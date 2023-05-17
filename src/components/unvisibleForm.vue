@@ -26,7 +26,8 @@ export default {
             all_folder:[
                   {
                         neme:'',
-                        color:''
+                        color:'',
+                        id:0
                   }
             ],
             visibleForm: 0,
